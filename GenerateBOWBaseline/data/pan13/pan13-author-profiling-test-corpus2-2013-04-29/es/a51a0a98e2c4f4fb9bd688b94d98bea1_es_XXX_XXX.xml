@@ -1,0 +1,34 @@
+<author lang="es" gender="XXX" age_group="XXX">	<conversations count="2">		<conversation id="292ddf25650313dd169752f0c922f35f">			Open Office 3.0
+&lt;br /&gt;&lt;br /&gt;OpenOffice.org segun wikipedia: es una suite ofimática de software libre y código abierto de distribución gratuita que incluye herramientas como procesador de textos, hoja de cálculo, presentaciones, herramientas para el dibujo vectorial y base de datos. Está disponible para muchas y diversas plataformas, como Microsoft Windows, sistemas de tipo Unix con el Sistema X Window como GNU/Linux, BSD, Solaris y Mac OS X. También está disponible para Mac Os X un programa similar derivado denominado NeoOffice. OpenOffice está pensado para ser compatible con Microsoft Office, con quien compite. Soporta el estándar ISO OpenDocument con lo que es fácil el intercambio de documentos con muchos programas, y puede ser utilizado sin costo alguno.
+&lt;br /&gt;&lt;br /&gt;OpenOffice.org posee como base inicial a StarOffice, una suite ofimática desarrollada por StarDivision y adquirida por Sun Microsystems en agosto de 1999. El código fuente de la suite fue liberado en julio de 2000, con la intención de hacer frente al dominio en el mercado de Microsoft Office proporcionando una alternativa abierta, de bajo costo y alta calidad. El código fuente de la aplicación está disponible bajo la licencia LGPL.
+&lt;br /&gt;&lt;br /&gt;ok, suena fantastico pero al usuario promedio, para estudiantes, oficinas de pymes, etc, es una alternativa valida???
+&lt;br /&gt;&lt;br /&gt;con mi experiencia como Asesor, debo decir que si; para la mayoria de tareas de proceso de textos, hojas de cálculo con algunas macros, presentaciones electrónicas, dibujos vectoriales y bases de datos. 
+&lt;br /&gt;&lt;br /&gt;La compatibilidad con Microsoft Office no es un problema, a menos que utilice macros sofisticadas en el libro de trabajo.
+&lt;br /&gt;Además, OpenOffice ofrece características no presentes en Microsoft Office como la conversión automática o no de datos a formatos PDF o Flash.
+&lt;br /&gt;&lt;br /&gt;la compatibilidad de formatos entre suites (openoffice, works, microsoft office, etc...) es bastante amplia .
+&lt;br /&gt;tan es asi que se pueden editar directamente documentos portables (PDF) y el estandar xml no es ahora ninguna limitante
+&lt;br /&gt;&lt;br /&gt;Otras novedades que presentará OpenOffice 3.0 son:
+&lt;br /&gt;&lt;br /&gt;* Posibilidad de ejecutarse de manera nativa sobre Mac OS X sin necesidad de X11.
+&lt;br /&gt;    * La interfaz gráfica incluye nuevos iconos más pulidos e intuitivos.
+&lt;br /&gt;    * Inclusión de soporte para VBA (Visual Basic for Applications) en la herramienta Solver, que en esta nueva versión también se habrá potenciado. Solver permite al usuario resolver problemas suponiendo unos valores fijos para una serie de celdas mientras se varían otras.
+&lt;br /&gt;    * En la hoja de cálculo soporta hasta 1024 columnas frente a las 256 tradicionales. La denominación de las columnas que superan el código ZZ se realiza con tres letras (AAA hasta AMJ).
+&lt;br /&gt;    * El procesador de textos puede mostrar varias páginas simultáneamente, una capacidad especialmente útil en sistemas con más de un monitor.
+&lt;br /&gt;    * Mejora en el sistema de notas incluidas en los documentos de Writer.		</conversation>		<conversation id="35b8e562c348a2ea59673647b75ad8cf">			Me dedico a la reparación de equipo de computo, y recientemente me llego a las manos una &quot;computadora DEL MUNDO DE CAPULINITA&quot; acerone netbook, con un problema aparentemente comun, esto es que el audio se reproduce pero de modo entrecortado. 
+&lt;br /&gt;&lt;br /&gt;antes un poco de teoria:
+&lt;br /&gt;&lt;br /&gt;DMA (DIRECT MEMORY ACCESS), Acceso directo a memoria. Componente integrado en un periférico que libera al procesador en la tarea de transferir datos entre dispositivos y memoria. El acceso se realiza por bloque de datos.
+&lt;br /&gt;&lt;br /&gt;PIO (PROGRAMABLE INPUT/OUTPUT), Entrada/Salida programable. Componente encargado de ejecutar las instrucciones dirigidas a los periféricos. A diferencia de la DMA requiere atención del procesador para su funcionamiento. Como contrapartida es mucho más sencillo y barato.
+&lt;br /&gt;&lt;br /&gt;EN FIN EL PROCEDIMIENTO ES EL SIGUIENTE:
+&lt;br /&gt;&lt;br /&gt;MI PC
+&lt;br /&gt;PROPIEDADES
+&lt;br /&gt;HARDWARE
+&lt;br /&gt;ADMINISTRADOR DE DISPOSITIVOS
+&lt;br /&gt;CONTROLADOR DE IDE ATA/API
+&lt;br /&gt;CANAL IDE PRINCIPAL
+&lt;br /&gt; dar clic derecho y en PROPIEDADES
+&lt;br /&gt; ir a CONFIGURACION AVANZADA se muestra el  MODO DE TRANSFERENCIA ACTUAL
+&lt;br /&gt;seguramente se encuentra en  MODO PIO
+&lt;br /&gt;&lt;br /&gt;&quot;lo que haremos sera desinstalarlo para que el sistema lo reconozca pero en modo DMA ULTRA 5&quot;
+&lt;br /&gt;&lt;br /&gt;regresen hasta CANAL IDE
+&lt;br /&gt;DESINSTALAR 
+&lt;br /&gt;la maquina sera reiniciada dos veces, en la primera ocación se reconocera el dispositivo ide y en la segunda se finalizara la configuracion del mismo. esto lo hace el win xp de manera automatica!!!!
+&lt;br /&gt;&lt;br /&gt;SUERTE ESPERO LES SEA DE UTILIDAD!!!!!		</conversation>	</conversations></author>
