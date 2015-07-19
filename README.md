@@ -3,4 +3,6 @@ Código fuente Java del estudio de "Author Profiling" para la asignatura Text Mi
 
 Dentro del directorio "R" está incluido el proyecto R que realiza una descripción sencilla del dataset usado.
 
-En el raíz está el artículo que decribre este proyecto
+Dentro del directorio "GenerateBOWBaseline" está incluido el código fuente Java principal.
+
+En el raíz está el artículo que describe este proyecto.
