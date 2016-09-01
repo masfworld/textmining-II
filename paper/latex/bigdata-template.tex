@@ -74,7 +74,7 @@ Hay otras características distintas a los N-gramas que se han tenido en cuentas
 
 Para todas estas características se ha calculado su frecuencia con respecto al texto de entrada y se han añadido como dimensión adicional a la frecuencia de N-gramas.
 
-Hay que tener presente los dos tipos de N-gramas. Por un lado tenemos los N-gramas de caracteres y por otro N-gramas de palabras. Por ejemplo, para el caso de las palabras, podemos considerar un trigrama el siguiente texto: "Hola como estas". Para este trabajo hemos considerado que los N-gramas de caracteres podían dar mejores resultados, resultado de unos resultados anteriores a este artículo.
+Hay que tener presente los dos tipos de N-gramas. Por un lado tenemos los N-gramas de caracteres y por otro N-gramas de palabras. Por ejemplo, para el caso de las palabras, podemos considerar un trigrama el siguiente texto: "Hola como estas". Para este trabajo hemos considerado que los N-gramas de caracteres podían dar mejores resultados.
 
 \section{Resultados experimentales}
 
@@ -95,8 +95,8 @@ A continuación se muestra una tabla con los resultados en base a distintas prue
 
 \begin{tabular}[c]{@{}c@{}}N-gramas 2-5 carac. +\\ terminaciones ``ás'', ``és'', ``ís''\end{tabular} & Naive Bayes & 39.975 \% & 47.008 \% \\ \hline
 \begin{tabular}[c]{@{}c@{}}N-gramas 2-5 carac. +\\ terminaciones ``ás'', ``és'', ``ís''\end{tabular} & Super Vector Machine & 83.529 \% & 76.558 \% \\ \hline
-\begin{tabular}[c]{@{}c@{}}N-gramas 2-5 carac. +\\ terminaciones ``ás'', ``és'', ``ís'' +\\ terminaciones ``ico'', ``ito''\end{tabular} & Naive Bayes & 0 \% & 0 \% \\ \hline
-\begin{tabular}[c]{@{}c@{}}N-gramas 2-5 carac. +\\ terminaciones ``ás'', ``és'', ``ís'' +\\ terminaciones ``ico'', ``ito''\end{tabular} & Super Vector Machine & 0 \% & 0 \% \\ \hline
+\begin{tabular}[c]{@{}c@{}}N-gramas 2-5 carac. +\\ terminaciones ``ás'', ``és'', ``ís'' +\\ terminaciones ``ico'', ``ito''\end{tabular} & Naive Bayes & 39.913 \% & 48.365 \% \\ \hline
+\begin{tabular}[c]{@{}c@{}}N-gramas 2-5 carac. +\\ terminaciones ``ás'', ``és'', ``ís'' +\\ terminaciones ``ico'', ``ito''\end{tabular} & Super Vector Machine & 97.223 \% & 86.181 \% \\ \hline
 \begin{tabular}[c]{@{}c@{}}N-gramas 2-5 carac. +\\ terminaciones ``ás'', ``és'', ``ís'' +\\ terminaciones ``ico'', ``ito''+\\ ``vos'' \end{tabular} & Naive Bayes & 33.806 \% & 47.07 \% \\ \hline
 \begin{tabular}[c]{@{}c@{}}N-gramas 2-5 carac. +\\ terminaciones ``ás'', ``és'', ``ís'' +\\ terminaciones ``ico'', ``ito''+\\ ``vos'' \end{tabular} & Super Vector Machine & 84.207 \% & 76.620 \% \\ \hline
 
@@ -114,7 +114,9 @@ Todas las pruebas llevan implícitas las siguientes características:
 \item Frecuencia de risas
 \end{itemize}
 
-Se puede observar que la inclusión de los N-gramas supone un aumento ``considerable" del \emph{accuracy}. Las demás características no aportan mucho, algunas mejoran un poco, pero no es considerable el aumento. Quizás se puede observar una ligera mejoría en los N-gramas de 3 caracteres cuando examinamos la variación del lenguaje
+Se puede observar que la inclusión de los N-gramas supone un aumento ``considerable" del \emph{accuracy}. Casi todas las demás características no aportan mucho, algunas mejoran un poco, pero no es considerable el aumento. Quizás se puede observar una ligera mejoría en los N-gramas de 3 caracteres cuando examinamos la variación del lenguaje.
+
+La verdadera característica que aporta valor es cuando ponemos la terminaciones ``ico'' e ``ito''. Quizás al mezclarla con ``vos'' empeora porque esta última es sólo representativa de unas pocas zonas.
 
 Como era de esperar si cambiamos un algoritmo probabilístico, como es el "Naive Bayes", por un Super Vector Machine mejoramos notablemente. Random Forest también es mejor que ``Naive Bayes'' pero no tanto como Super Vector Machine
 
