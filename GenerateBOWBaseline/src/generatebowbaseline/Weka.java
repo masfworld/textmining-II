@@ -2,8 +2,6 @@ package generatebowbaseline;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.TreeMap;
 
 /**
  *
@@ -30,7 +28,11 @@ public class Weka {
                 "@attribute 'nexclamacion' real\n"+
                 "@attribute 'ninterrogacion' real\n"+
                 "@attribute 'nuppercase' real\n"+
-                "@attribute 'nlaugh' real\n";
+                "@attribute 'nlaugh' real\n"+
+                "@attribute 'nending' real\n"+
+                "@attribute 'nendingIco' real\n"+
+                "@attribute 'nendingIto' real\n"+
+                "@attribute 'ntypical' real\n";
         sHeader += "@attribute 'class' {" + classValue + "}\n" +
         "@data\n";
         return sHeader;
@@ -60,10 +62,18 @@ public class Weka {
                     ((double) oFeatures.NExclamacion / (double) iTotal) + "," +
                     ((double) oFeatures.NInterrogacion / (double) iTotal) + "," +
                     ((double) oFeatures.NUpperCase / (double) iTotal) + "," +
-                    ((double) oFeatures.NLaugh / (double) iTotal) + ",";
+                    ((double) oFeatures.NLaugh / (double) iTotal) + "," +
+                    ((double) oFeatures.NEnding / (double) iTotal) + "," +
+                    ((double) oFeatures.NEndingIco / (double) iTotal) + "," +
+                    ((double) oFeatures.NEndingIto / (double) iTotal) + "," +
+                    ((double) oFeatures.NTypical / (double) iTotal) + ",";
         }
         else{
             weka += (0.0) + "," +
+                    (0.0) + "," +
+                    (0.0) + "," +
+                    (0.0) + "," +
+                    (0.0) + "," +
                     (0.0) + "," +
                     (0.0) + "," +
                     (0.0) + "," +

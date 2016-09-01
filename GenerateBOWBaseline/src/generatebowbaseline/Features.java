@@ -22,10 +22,17 @@ public class Features {
     public int NInterrogacion = 0;
     public int NUpperCase = 0;
     public int NLaugh = 0;
+    public int NEndingIco = 0;
+    public int NEndingIto = 0;
+    public int NEnding = 0;
+    public int NTypical = 0;
     //public int NDistinctWords = 0;
 
-    private static final String[] VALUES_LAUGH = new String[] { "jeje", "jaja", "xdd", "hehe", "haha", "jiji", "risa" };
+    private static final String[] VALUES_LAUGH = new String[] { "jeje", "jaja", "xddd", "hehe", "haha", "jiji", "risa" };
     private static final Set<String> Laugh = new HashSet<>(Arrays.asList(VALUES_LAUGH));
+
+    private static final String[] VALUES_ENDING = new String[] { "ás", "és", "ís" };
+    private static final Set<String> ending = new HashSet<>(Arrays.asList(VALUES_ENDING));
     
     public void GetNumFeatures(String text) {
         for (int i=0;i<text.length();i++) {
@@ -48,10 +55,33 @@ public class Features {
             	NUpperCase++;
             }
         }
-        //Laugh frequency
+
         for (String word : text.split(" ")) {
-            if (Laugh.contains(word.toLowerCase())) {
-                NLaugh++;
+            //Laugh frequency
+            if (word.length() > 4) {
+                if (Laugh.contains(word.toLowerCase().substring(0, 3))) {
+                    NLaugh++;
+                }
+            }
+            //Ending frequency
+            if (word.length() > 3) {
+                if (ending.contains(word.substring(word.length() - 3))) {
+                    NEnding++;
+                }
+            }
+
+            if (word.length() > 3) {
+                if (word.endsWith("ico")) {
+                    NEndingIco++;
+                }
+                if (word.endsWith("ito")) {
+                    NEndingIto++;
+                }
+            }
+
+            //Typical Words
+            if (word.contains("vos")) {
+                NTypical++;
             }
         }
 

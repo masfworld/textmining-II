@@ -1,26 +1,13 @@
 package generatebowbaseline;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.TreeMap;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.apache.lucene.analysis.ngram.NGramTokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
+import java.io.*;
+import java.util.*;
 
 /**
  * @author kicorangel masotomayor
@@ -31,25 +18,25 @@ public class GenerateBOWBaseline {
     private static int MAXSIZENGRAM = 5;
     
     public static void main(String[] args) {
-        String TRUTH = "data/pan13/pan13-author-profiling-test-corpus2-2013-04-29/truth-es.txt";
-        String PATH = "data/pan13/pan13-author-profiling-test-corpus2-2013-04-29/es/";
-        String NGRAMChar = "data/pan13/ngram-esChar.txt";
+        String TRUTH = "data/hispatweets/training.txt";
+        String PATH = "data/hispatweets/";
+        String NGRAMChar = "data/hispatweets/ngram-esChar.txt";
         
         try {
 			//Read truth file and it's inserted in memory
             Hashtable<String, TruthInfo> oTruth = ReadTruth(TRUTH);
             //Read Trigrams file, or generate it
             ArrayList<String>oNgramChar = ReadTrigramsChar(PATH, NGRAMChar);
-            String OUTPUT = "data/pan13/pan-ap-13-training-es-{task}.arff";
+            String OUTPUT = "data/hispatweets/tweets-training-es-{task}.arff";
             GenerateBaseline(PATH, oNgramChar, oTruth, OUTPUT.replace("{task}", "gender"), "MALE, FEMALE");
-            GenerateBaseline(PATH, oNgramChar, oTruth, OUTPUT.replace("{task}", "age"), "10S, 20S, 30S");
+            GenerateBaseline(PATH, oNgramChar, oTruth, OUTPUT.replace("{task}", "country"), "MEXICO, COLOMBIA, VENEZUELA, ESPANA, ARGENTINA, PERU, CHILE");
             
-        }catch (Exception ex) {
+        }catch (Exception ignored) {
             
         }
     }
 
-    /*
+    /**
     Read corpus file.
     Generate the features vector to insert in a weka file
     * */
@@ -61,71 +48,69 @@ public class GenerateBOWBaseline {
             fw = new FileWriter(outputFile);
             fw.write(Weka.HeaderToWeka(aNgramChar, nTerms, classValues));
             fw.flush();
-            
-            File directory = new File(path);
-            String [] files = directory.list();
-            for (int iFile = 0; iFile < files.length; iFile++) 
+
+            ArrayList<File> files = getFilesFromSubfolders(path, new ArrayList<File>());
+
+            assert files != null;
+            int countFiles = 0;
+            for (File file : files)
             {
-                System.out.println("--> Generating " + (iFile+1) + "/" + files.length);
+                System.out.println("--> Generating " + (++countFiles) + "/" + files.size());
                 try {
                     Hashtable<String, Integer> oDocBOW = new Hashtable<>();
                     Hashtable<String, Integer> oDocNgrams = new Hashtable<>();
 
-                    String sFileName = files[iFile];
+                    String sFileName = file.getName();
 
-                    File fXmlFile = new File(path + "/" + sFileName);
-                    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-                    DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-                    Document doc = dBuilder.parse(fXmlFile);
-                    NodeList documents = doc.getDocumentElement().getElementsByTagName("conversation");
-                    String []fileInfo = sFileName.split("_");
-                    String sAuthor = fileInfo[0];
+                    //File fJsonFile = new File(path + "/" + sFileName);
+                    //Get name without extension
+                    String sAuthor = sFileName.substring(0, sFileName.lastIndexOf('.'));
+
+                    Scanner scn = new Scanner(file, "UTF-8");
                     String sAuthorContent = "";
-                    for (int i=0;i<documents.getLength();i++) {
-                        try {
-                            Element element = (Element)documents.item(i);
-                            String sHtml = element.getTextContent();
-                            String sContent = GetText(sHtml);
+                    //Reading and Parsing Strings to Json
+                    while(scn.hasNext()){
+                        JSONObject tweet= (JSONObject) new JSONParser().parse(scn.nextLine());
 
-                            sAuthorContent += sContent + " " ;
+                        String textTweet = (String) tweet.get("text");
 
-                            StringReader reader = new StringReader(sContent);
-                            
-                            NGramTokenizer gramTokenizer = new NGramTokenizer(reader, MINSIZENGRAM, MAXSIZENGRAM);
-                            CharTermAttribute charTermAttribute = gramTokenizer.addAttribute(CharTermAttribute.class);
-                            gramTokenizer.reset();           
-                            
-                            gramTokenizer.reset();        
-                            
-                            while (gramTokenizer.incrementToken()) {
-                                String sTerm = charTermAttribute.toString();
-                                int iFreq = 0;
-                                if (oDocBOW.containsKey(sTerm)) {
-                                    iFreq = oDocBOW.get(sTerm);
-                                }
-                                oDocBOW.put(sTerm, ++iFreq);
+                        sAuthorContent += textTweet + " " ;
+
+                        StringReader reader = new StringReader(textTweet);
+
+                        NGramTokenizer gramTokenizer = new NGramTokenizer(reader, MINSIZENGRAM, MAXSIZENGRAM);
+                        CharTermAttribute charTermAttribute = gramTokenizer.addAttribute(CharTermAttribute.class);
+                        gramTokenizer.reset();
+
+                        gramTokenizer.reset();
+
+                        while (gramTokenizer.incrementToken()) {
+                            String sTerm = charTermAttribute.toString();
+                            int iFreq = 0;
+                            if (oDocBOW.containsKey(sTerm)) {
+                                iFreq = oDocBOW.get(sTerm);
                             }
-                            
-                            gramTokenizer.end();
-                            gramTokenizer.close();
-                        } catch (Exception ex) {
-                                    System.out.println("ERROR: " + ex.toString());
-                            String s = ex.toString();
+                            oDocBOW.put(sTerm, ++iFreq);
                         }
+
+                        gramTokenizer.end();
+                        gramTokenizer.close();
                     }
                     
                     Features oFeatures = new Features();
                     oFeatures.GetNumFeatures(sAuthorContent);
-                    
+
                     if (oTruth.containsKey(sAuthor)) {
                         TruthInfo truth = oTruth.get(sAuthor);
-                        String sGender = truth.Gender.toUpperCase();
-                        String sAge = truth.Age.toUpperCase();
+                        String sGender = truth.gender.toUpperCase();
+                        //If gender is unknown, this author is not interesting
+                        if (sGender.equals("UNKNOWN")) continue;
+                        String sCountry = truth.country.toUpperCase();
 
                         if (classValues.contains("MALE")) {
                             fw.write(Weka.FeaturesToWeka(aNgramChar, oDocBOW, oDocNgrams, oFeatures, nTerms, sGender));
                         } else {
-                            fw.write(Weka.FeaturesToWeka(aNgramChar, oDocBOW, oDocNgrams, oFeatures, nTerms, sAge));
+                            fw.write(Weka.FeaturesToWeka(aNgramChar, oDocBOW, oDocNgrams, oFeatures, nTerms, sCountry));
                         }
                         fw.flush();
                     }
@@ -135,12 +120,15 @@ public class GenerateBOWBaseline {
                  }
             }
         } catch (Exception ex) {
-            
+            System.out.println("ERROR: " + ex.toString());
         } finally {
-            if (fw!=null) { try { fw.close(); } catch (Exception k) {} }
+            if (fw!=null) { try { fw.close(); } catch (Exception ignored) {} }
         }
     }
 
+    /**
+     * Read NGrams. This method read from file if it exists, in other case generate this file
+     * */
     private static ArrayList<String> ReadTrigramsChar(String corpusPath, String ngramPath) {
         Hashtable<String, Integer> oNgrams = new Hashtable<>();
         ArrayList<String> aNgrams = new ArrayList<>();
@@ -169,32 +157,34 @@ public class GenerateBOWBaseline {
                 if (fr!=null) { try { fr.close(); } catch (Exception k) {} }
             }
         } else {
-            File directory = new File(corpusPath);
-            File []files = directory.listFiles();
+            ArrayList<File> files = getFilesFromSubfolders(corpusPath, new ArrayList<File>());
+            //File directory = new File(corpusPath);
+            //File []files = directory.listFiles();
 
-            for (int iFile = 0; iFile < files.length; iFile++)  {
-                System.out.println("--> Preprocessing " + (iFile+1) + "/" + files.length);
+            int countFiles = 0;
+            for (File file : files)  {
+                System.out.println("--> Preprocessing " + (++countFiles) + "/" + files.size());
 
                 try {
-                    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-                    DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-                    Document doc = dBuilder.parse(files[iFile]);
-                    NodeList documents = doc.getDocumentElement().getElementsByTagName("conversation");
+                    Scanner scn = new Scanner(file, "UTF-8");
 
-                    double iDocs = documents.getLength();
-                    for (int i=0;i<iDocs;i++) {
-                        Element element = (Element)documents.item(i);
-                        String sHtml = element.getTextContent();
-                        String sContent = GetText(sHtml);
+                    //Reading and Parsing Strings to Json
+                    while(scn.hasNext()){
+                        JSONObject tweet= (JSONObject) new JSONParser().parse(scn.nextLine());
 
-                        StringReader reader = new StringReader(sContent);                        
-                        
+                        String textTweet = (String) tweet.get("text");
+
+                        StringReader reader = new StringReader(textTweet);
+
                         NGramTokenizer gramTokenizer = new NGramTokenizer(reader, MINSIZENGRAM, MAXSIZENGRAM);
                         CharTermAttribute charTermAttribute = gramTokenizer.addAttribute(CharTermAttribute.class);
-                        gramTokenizer.reset();                                                                      
+                        gramTokenizer.reset();
 
                         while (gramTokenizer.incrementToken()){
-                        	String sTerm = charTermAttribute.toString();
+                            String sTerm = charTermAttribute.toString();
+                            if (sTerm.endsWith(":")){
+                                sTerm = sTerm.substring(0, sTerm.length()-1);
+                            }
                             int iFreq = 0;
                             if (oNgrams.containsKey(sTerm)) {
                                 iFreq = oNgrams.get(sTerm);
@@ -202,12 +192,12 @@ public class GenerateBOWBaseline {
                             oNgrams.put(sTerm, ++iFreq);
                             //System.out.println(charTermAttribute.toString());
                         }
-                        
+
                         gramTokenizer.end();
                         gramTokenizer.close();
-                    }                                       
+                    }
                 } catch (Exception ex) {
-
+                    System.out.println("Error reading JSON file");
                 }
             }
 
@@ -229,7 +219,7 @@ public class GenerateBOWBaseline {
                     fw.flush();
                 }
             } catch (Exception ex) {
-
+                System.out.println("ERROR: " + ex.toString());
             } finally {
                 if (fw!=null) { try {fw.close();} catch(Exception k) {} }
             }
@@ -238,6 +228,11 @@ public class GenerateBOWBaseline {
         return aNgrams;
     }
 
+    /**
+     * Read truth file where class item is known
+     *
+     * @return hash key=author, value=true class
+     * */
     private static Hashtable<String, TruthInfo> ReadTruth(String path) {
         Hashtable<String, TruthInfo> oTruth = new Hashtable<String, TruthInfo>();
         
@@ -256,8 +251,8 @@ public class GenerateBOWBaseline {
                     String sAuthorId = data[0];
                     if (!oTruth.containsKey(sAuthorId)) {
                         TruthInfo info = new TruthInfo();
-                        info.Gender = data[1];
-                        info.Age= data[2];
+                        info.country = data[1];
+                        info.gender = data[2];
                         oTruth.put(sAuthorId, info);
                     }
                 }
@@ -265,22 +260,30 @@ public class GenerateBOWBaseline {
         } catch (Exception ex) {
             System.out.println(ex.toString());
         } finally {
-            if (bf!=null) { try { bf.close(); } catch (Exception k) {} }
-            if (fr!=null) { try { fr.close(); } catch (Exception k) {} }
+            if (bf!=null) { try { bf.close(); } catch (Exception ignored) {} }
+            if (fr!=null) { try { fr.close(); } catch (Exception ignored) {} }
         }
         
         return oTruth;
     }
-    
-    public static String GetText(String html)
-    {
-        try {
-            Html2Text html2text = new Html2Text();
-            Reader in = new StringReader(html);
-            html2text.parse(in);
-            return html2text.getText();
-        } catch (IOException ex) {
-            return html;
+
+    /**
+     * Get all files from directory.
+     * It returns files from subfolders and discard first level files from directoryName
+     * */
+    private static ArrayList<File> getFilesFromSubfolders(String directoryName, ArrayList<File> files) {
+
+        File directory = new File(directoryName);
+
+        // get all the files from a directory
+        File[] fList = directory.listFiles();
+        for (File file : fList) {
+            if (file.isFile() && file.getName().endsWith(".json")) {
+                files.add(file);
+            } else if (file.isDirectory()) {
+                getFilesFromSubfolders(file.getAbsolutePath(), files);
+            }
         }
+        return files;
     }
 }

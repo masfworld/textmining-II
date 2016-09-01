@@ -2,9 +2,9 @@ package generatebowbaseline;
 
 /**
  *
- * @author kico
+ * @author sotomig
  */
 public class TruthInfo {
-    public String Age = "";
-    public String Gender = "";
+    public String gender = "";
+    public String country = "";
 }

@@ -1,5 +1,5 @@
 library(foreign)
-dataset <- read.arff("../../GenerateBOWBaseline/data/pan13/pan-ap-13-training-es-age.arff")
+dataset <- read.arff("../../GenerateBOWBaseline/data/hispatweets/tweets-training-es-country.arff")
 
 #Calculating the means for each N-gram
 medias <- colMeans(dataset[1:1008])
